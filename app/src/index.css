@@ -1,0 +1,143 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.topbar{
+  background-color: #f7a141;
+  color:#114370;
+}
+.topbar .navbar-brand {
+  color: #fff; /* Style the Navbar.Brand specifically */
+}
+
+.topbar .nav-link {
+  color: #114370 !important; /* Style the Nav.Link elements */
+  /* Add hover effects, etc. as needed */
+  font-size: 20px;
+    font-weight: 500;
+}
+
+button{
+background-color:#f7a141 !important;
+color:white !important;
+}
+.danger{
+  background-color: red !important;
+}
+.sidebar {
+  background-color: #195557;
+  border-right: 1px solid #ced4da;
+  height: 100vh !important;
+}
+.main{
+  min-height:100vh !important;
+}
+/********************sidebar************************/
+/*.d-flex {
+  display: flex;
+  height: 100vh;
+}*/
+
+
+.nav-link{
+  color:white !important;
+}
+
+.active{
+  background-color: rgba(13, 110, 253, 0.25);
+}
+
+.instance-name-container {
+  max-width: 60%; /* Adjust the width as needed */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.instance-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px; /* Space between the name and the icon */
+}
+
+.instance-icons {
+  max-width: 40%; /* Adjust the width as needed */
+}
+
+.instance-icons a,
+.instance-icons .form-check {
+  margin-left: 8px; /* Space between icons */
+  display: flex;
+  align-items: center;
+}
+
+.app-icon{
+  color:#195557;
+}
+
+.form-check-input{
+  border-color: grey;
+}
+
+.form-check-input:checked {
+    background-color: #195557 !important; /* Default unchecked background color */
+    border-color: #195557 !important;
+}
+
+/* Change the switch background color when checked */
+.custom-switch .form-check-input:checked {
+    background-color: #195557; /* Change this to your preferred color (e.g., green) */
+    border-color: #195557;
+}
+
+.instance-switch .form-check .form-check-input {
+    float: left !important;
+}
+
+.btn{
+  background-color: #195557 !important;
+}
+
+.footer {
+  width: 100%;
+  background-color: #343a40; /* Dark background */
+  color: white;
+  padding: 1rem;
+}
+
+.footer a {
+  color: #adb5bd; /* Light gray for links */
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #fff; /* White on hover */
+}
+/* SWITCH TRACK OFF = RED (thumb stays white) */
+.form-check-input[type="checkbox"]:not(:checked) {
+  background-color: #ff0000ab !important;
+  border-color: #ff0000ab !important;
+}
+
+/* Keep ON state as your dark green */
+.form-check-input[type="checkbox"]:checked {
+  background-color: #195557 !important;
+  border-color: #195557 !important;
+}
+
+.form-switch .form-check-input:not(:checked) {
+    background-position: right center;
+    --bs-form-switch-bg: url(data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-4 -4 8 8%27%3e%3ccircle r=%273%27 fill=%27%23fff%27/%3e%3c/svg%3e);
+}
