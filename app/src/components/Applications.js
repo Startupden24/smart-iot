@@ -75,8 +75,35 @@ const Applications = () => {
         console.error('Error fetching applications:', error);
       }
     };
+    const handleSwitchChange = async (event, appId) => {
+  const newStatus = event.target.checked ? "active" : "stopped";
+
+  // Update frontend UI immediately
+  setApplications(prev =>
+    prev.map(app =>
+      app._id === appId ? { ...app, status: newStatus } : app
+    )
+  );
+
+  try {
+    // Send to backend
+    await axios.put(
+      `${REACT_API_BASE_URL}/application/status/${appId}`,
+      { status: newStatus },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`
+        }
+      }
+    );
+
+  } catch (error) {
+    console.error("Failed to update application:", error);
+  }
+};
+
   
-  const handleSwitchChange = async (event, appId) => {
+ /* const handleSwitchChange = async (event, appId) => {
     setSwitchStates((prevStates) => ({
       ...prevStates,
       [appId]: event.target.checked
@@ -85,7 +112,7 @@ const Applications = () => {
         {status:event.target.checked},
         {headers: {
             Authorization: `Bearer `+localStorage.getItem('authToken')}});
-  };
+  };*/
   /*const handleSwitchInstChange = async (event, appId) => {
     console.log("before:"+event.target.checked);
     const response = await axios.put(REACT_API_BASE_URL+'/instance/status/'+appId,{status:event.target.checked},{headers: {
@@ -100,37 +127,37 @@ const Applications = () => {
       alert(response.data.message)
     }
   };*/
-  const handleSwitchInstChange = async (event, appId) => {
-    // Store the checked value in a variable
-    const isChecked = event.target.checked;
-    console.log("before:", isChecked);
+const handleSwitchInstChange = async (event, instanceId) => {
+  const newStatus = event.target.checked ? "running" : "stopped";
 
-    try {
-        const response = await axios.put(
-            `${REACT_API_BASE_URL}/instance/status/${appId}`,
-            { status: isChecked },
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-                },
-            }
-        );
+  try {
+    const res = await axios.put(
+      `${REACT_API_BASE_URL}/instance/status/${instanceId}`,
+      { status: event.target.checked },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      }
+    );
 
-        if (response.data.success) {
-            console.log("after (success):", isChecked);
-
-            setInstSwitchStates((prevStates) => ({
-                ...prevStates,
-                [appId]: isChecked, // Use the stored value
-            }));
-        } else {
-            alert(response.data.message);
-        }
-    } catch (error) {
-        console.error("Error updating instance status:", error);
-        alert("Failed to update instance status.");
+    if (!res.data.success) {
+      alert(res.data.message);
+      return;
     }
+
+    // 🔥 Update React state immediately (this is what fixes your UI)
+    setInstances((prev) =>
+      prev.map((inst) =>
+        inst._id === instanceId ? { ...inst, status: newStatus } : inst
+      )
+    );
+    fetchApplications();
+  } catch (err) {
+    console.error(err);
+  }
 };
+
 
   const fetchInstances = async (appId) => {
     //console.log(appId);
@@ -388,7 +415,10 @@ const Applications = () => {
               <Col md={12} key={index} className="mb-3">
                 <Card>
                   <Card.Body className='row'>
-                    <Card.Title className="col-9" onClick={() => toggleInstances(app._id)}>{app.name} <Badge bg="success">{app.status}</Badge>
+                    <Card.Title className="col-9" onClick={() => toggleInstances(app._id)}>{app.name} <Badge bg={app.status === "stopped" ? "danger" : "success"}>
+  {app.status === "stopped" ? "Inactive" : app.status}
+</Badge>
+
                     {expandedAppId === app._id && (
                     <FontAwesomeIcon icon={faCaretUp} className="mx-2" title="Collapse" />)
                     } 
@@ -398,27 +428,12 @@ const Applications = () => {
                       </Card.Title>                      
                       <span className="col-3 text-end">
                           <FontAwesomeIcon icon={faEdit} className="mx-2" title="Edit Application" onClick={() => handleEditClick(app)} />
-                        {/*<Link to={`/dashboard/application/${app._id}`}>
-                          <FontAwesomeIcon
-                            icon={faEye}
-                            className="mx-2 app-icon"
-                            title="View Application"
-                          />
-                        </Link>*/}
+                       
                         <FontAwesomeIcon icon={faPlus} className="mx-2 app-icons" title="Add Instance" onClick={()=>handleAddClick(app)}/>
                         <FontAwesomeIcon icon={faTrash} className="mx-2 app-icons" title="Delete Application" onClick={()=>handleDelClick(app)} />
                         <FontAwesomeIcon icon={faUserPlus} className="mx-2 app-icons" title="Add Client" onClick={handleClientModal} />
         
-                        {/*<Form.Check
-                          key={app._id} // Use a unique key for each element
-                          type="switch"
-                          id={`custom-switch switch-${index}`}
-                          label=""
-                          title="Change Application status"
-                          className="d-inline"
-                          checked={switchStates[app._id] || false} // Use the state to determine checked status
-                          onChange={(event) => handleSwitchChange(event, app._id)} // Pass the app._id to the handler
-                        />*/}
+                        
                       </span>
                   </Card.Body>
 
@@ -442,7 +457,7 @@ const Applications = () => {
                               <span>
                                     <FontAwesomeIcon icon={faTrash} className="mx-2" title="Delete Instance" onClick={()=>handleDelInstClick(instance)} />
                         
-                              <span className="instance-switch"><Form.Check
+                             {/* <span className="instance-switch"><Form.Check
                                 key={instance._id} // Use a unique key for each element
                                 type="switch"
                                 id={`custom-switch switch-${instance._id}`}
@@ -451,7 +466,22 @@ const Applications = () => {
                                 className="d-inline"
                                 checked={instSwitchStates[instance._id] || false} // Use the state to determine checked status
                                 onChange={(event) => handleSwitchInstChange(event, instance._id)} // Pass the app._id to the handler
-                              /> </span> 
+                              /> </span> */}
+                              <span className="instance-switch">
+  <Form.Check
+    key={instance._id}
+    type="switch"
+    id={`custom-switch switch-${instance._id}`}
+    label=""
+    title="Change Instance status"
+    className="d-inline"
+    checked={instance.status === "running"}   // <-- FIXED
+    onChange={(event) =>
+      handleSwitchInstChange(event, instance._id)
+    }
+  />
+</span>
+
                         </span>
                             </ListGroup.Item>
                           ))}

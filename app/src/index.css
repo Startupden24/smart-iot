@@ -1,3 +1,4 @@
+/* ----- GLOBAL STYLES ----- */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -13,53 +14,76 @@ code {
     monospace;
 }
 
-.topbar{
+/* ----- TOPBAR ----- */
+.topbar {
   background-color: #f7a141;
-  color:#114370;
+  color: #114370;
 }
+
 .topbar .navbar-brand {
-  color: #fff; /* Style the Navbar.Brand specifically */
+  color: #fff;
 }
 
 .topbar .nav-link {
-  color: #114370 !important; /* Style the Nav.Link elements */
-  /* Add hover effects, etc. as needed */
+  color: #114370 !important;
   font-size: 20px;
-    font-weight: 500;
+  font-weight: 500;
 }
 
-button{
-background-color:#f7a141 !important;
-color:white !important;
+/* ----- BUTTONS ----- */
+button {
+  background-color: #f7a141 !important;
+  color: white !important;
 }
-.danger{
+
+.btn {
+  background-color: #195557 !important;
+}
+
+.danger {
   background-color: red !important;
 }
+
+/* ----- SIDEBAR ----- */
 .sidebar {
   background-color: #195557;
   border-right: 1px solid #ced4da;
   height: 100vh !important;
 }
-.main{
-  min-height:100vh !important;
-}
-/********************sidebar************************/
-/*.d-flex {
-  display: flex;
-  height: 100vh;
-}*/
 
-
-.nav-link{
-  color:white !important;
+.nav-link {
+  color: white !important;
 }
 
-.active{
+.active {
   background-color: rgba(13, 110, 253, 0.25);
 }
 
+/* ----- MAIN CONTENT ----- */
+.main {
+  min-height: 100vh !important;
+}
+
+/* ----- FOOTER ----- */
+.footer {
+  width: 100%;
+  background-color: #343a40;
+  color: white;
+  padding: 1rem;
+}
+
+.footer a {
+  color: #adb5bd;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #fff;
+}
+
+/* ----- INSTANCE NAMES & ICONS ----- */
 .instance-name-container {
-  max-width: 60%; /* Adjust the width as needed */
+  max-width: 60%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -69,75 +93,57 @@ color:white !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-right: 8px; /* Space between the name and the icon */
+  margin-right: 8px;
 }
 
 .instance-icons {
-  max-width: 40%; /* Adjust the width as needed */
+  max-width: 40%;
 }
 
 .instance-icons a,
 .instance-icons .form-check {
-  margin-left: 8px; /* Space between icons */
+  margin-left: 8px;
   display: flex;
   align-items: center;
 }
 
-.app-icon{
-  color:#195557;
+.app-icon {
+  color: #195557;
 }
 
-.form-check-input{
-  border-color: grey;
-}
-
-.form-check-input:checked {
-    background-color: #195557 !important; /* Default unchecked background color */
-    border-color: #195557 !important;
-}
-
-/* Change the switch background color when checked */
-.custom-switch .form-check-input:checked {
-    background-color: #195557; /* Change this to your preferred color (e.g., green) */
-    border-color: #195557;
-}
-
+/* ----- SWITCHES ----- */
+/* Remove float: left (was breaking thumb movement) */
 .instance-switch .form-check .form-check-input {
-    float: left !important;
+  float: none !important;
 }
 
-.btn{
-  background-color: #195557 !important;
+/* Base switch input */
+.form-check-input {
+  border-color: grey;
+  transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
 }
 
-.footer {
-  width: 100%;
-  background-color: #343a40; /* Dark background */
-  color: white;
-  padding: 1rem;
-}
-
-.footer a {
-  color: #adb5bd; /* Light gray for links */
-  text-decoration: none;
-}
-
-.footer a:hover {
-  color: #fff; /* White on hover */
-}
-/* SWITCH TRACK OFF = RED (thumb stays white) */
-.form-check-input[type="checkbox"]:not(:checked) {
+/* OFF state = red track, thumb left */
+.form-switch .form-check-input:not(:checked) {
   background-color: #ff0000ab !important;
   border-color: #ff0000ab !important;
+  --bs-form-switch-bg: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e);
 }
 
-/* Keep ON state as your dark green */
-.form-check-input[type="checkbox"]:checked {
+/* ON state = green track, thumb right */
+.form-switch .form-check-input:checked {
   background-color: #195557 !important;
   border-color: #195557 !important;
+  --bs-form-switch-bg: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e);
 }
 
-.form-switch .form-check-input:not(:checked) {
-    background-position: right center;
-    --bs-form-switch-bg: url(data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%27-4 -4 8 8%27%3e%3ccircle r=%273%27 fill=%27%23fff%27/%3e%3c/svg%3e);
+/* ----- INSTANCE SWITCH LABELS ----- */
+.instance-switch .form-check {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ----- FORM CHECK LABELS ----- */
+.form-check-label {
+  margin-left: 8px;
 }

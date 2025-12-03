@@ -94,35 +94,52 @@ const getInstance=async function(req,res){
         res.json({success:true,instance})
     
 }
-const changeStatus=async function(req,res){
-    try{
-    const appstatus=req.body.status?'running':'stopped'
-        if(appstatus=='running'){
-            const valid=await checkInstances(req.userId);
-            if(valid){
-            const container=await Instance.findByIdAndUpdate(req.params.id, {status:appstatus})
-            const response = await axios.get(`${process.env.AUTOMATION_URL}/start-container/`+container.name);
-            await Instance.findByIdAndUpdate(req.params.id, {status:appstatus});
-        }else{
-            res.json({success:false,message:"You already have 2 instances running.Please stop atleast one to enable this instance."})
+const changeStatus = async function (req, res) {
+    try {
+        const appstatus = req.body.status ? 'running' : 'stopped';
+
+        if (appstatus === 'running') {
+            const valid = await checkInstances(req.userId);
+
+            if (!valid) {
+                return res.json({
+                    success: false,
+                    message: "You already have 2 instances running. Please stop at least one to enable this instance."
+                });
+            }
+
+            // Valid
+            const container = await Instance.findByIdAndUpdate(
+                req.params.id,
+                { status: appstatus },
+                { new: true }
+            );
+
+            await axios.get(`${process.env.AUTOMATION_URL}/start-container/${container.name}`);
+        } 
+        else {
+            // STOP instance
+            const container = await Instance.findByIdAndUpdate(
+                req.params.id,
+                { status: appstatus },
+                { new: true }
+            );
+
+            await axios.get(`${process.env.AUTOMATION_URL}/stop-container/${container.name}`);
         }
-    }else{
-        const container=await Instance.findByIdAndUpdate(req.params.id, {status:appstatus})
-        const response = await axios.get(`${process.env.AUTOMATION_URL}/stop-container/`+container.name);
-        await Instance.findByIdAndUpdate(req.params.id, {status:appstatus});
-    }
-    /*const container=await Instance.findByIdAndUpdate(req.params.id, {status:appstatus});
-    const response = await axios.post(`${process.env.AUTOMATION_URL}/container/status`,{
-                containerId:container.container_id,
-                status:appstatus
+
+        return res.json({ success: true, message: "Status Changed" });
+
+    } catch (error) {
+        console.error("Error updating Instance:", error);
+        return res.status(500).send({
+            success: false,
+            message: "Failed to update Instance",
+            error: error.message
         });
-    */
-    res.json({success:true,message:"Status Changed"});
-        }catch(error){
-             console.error("Error updating Instance:", error);
-                res.status(500).send({ success: false, message: "Failed to update Instance", error: error.message });
-        }
-}
+    }
+};
+
 const checkInstances=async function(id){
     const count = await Instance.countDocuments({
       user: id,    // Match the user ID

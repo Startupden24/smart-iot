@@ -38,7 +38,7 @@ const createApplication=async function(req,res){
     }
 }
 
-const getApplications=async function(req,res){
+/*const getApplications=async function(req,res){
 	//console.log(req.query);
 	if(req.query.all){
 		const apps = await Application.find({
@@ -49,7 +49,49 @@ const getApplications=async function(req,res){
 	const apps=await Application.find({user:req.userId}).where({status:'active'});
 	res.json({success:true,data:apps})
 	}
-}
+}*/
+const getApplications = async function (req, res) {
+    try {
+        let query;
+
+        if (req.query.all) {
+            query = {
+                user: { $ne: req.userId }
+            };
+        } else {
+            query = { user: req.userId };
+        }
+
+        // Fetch applications and populate instances
+        let apps = await Application.find(query)
+		
+        // Determine and update status based on instances
+        for (const app of apps) {
+			
+            const instances = await Instance.find({ application: app._id });
+			let newStatus = "stopped"; // default
+
+            if (instances.length > 0) {
+                const hasActive = instances.some(inst => inst.status === "running");
+				
+                if (hasActive) newStatus = "active";
+            }
+
+            // Only update DB if status changed
+            if (app.status !== newStatus) {
+                app.status = newStatus;
+                await app.save();
+            }
+        }
+
+        return res.json({ success: true, data: apps });
+
+    } catch (err) {
+        console.error("Error fetching applications:", err);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
 
 const changeStatus=async function(req,res){
 	try{
